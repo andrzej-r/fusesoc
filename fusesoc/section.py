@@ -36,7 +36,7 @@ class EnumList(list):
         
 class SimulatorList(EnumList):
     def __new__(cls, *args, **kwargs):
-        values = ['icarus', 'modelsim', 'verilator', 'isim']
+        values = ['icarus', 'modelsim', 'verilator', 'isim', 'xsim']
         return super(SimulatorList, cls).__new__(cls, *args, values=values)
 
 class SourceType(str):
@@ -97,7 +97,7 @@ class MainSection(Section):
 
         self._add_member('description', str, "Core description")
         self._add_member('depend'     , StringList, "Common dependencies")
-        self._add_member('simulators' , SimulatorList, "Supported simulators. Valid values are icarus, modelsim, verilator and isim. Each simulator have a dedicated section desribed elsewhere in this document")
+        self._add_member('simulators' , SimulatorList, "Supported simulators. Valid values are icarus, modelsim, verilator, isim and xsim. Each simulator have a dedicated section desribed elsewhere in this document")
         self._add_member('patches'    , StringList, "FuseSoC-specific patches")
 
         if items:
@@ -221,6 +221,25 @@ class IsimSection(ToolSection):
         s = ""
         if self.depend: s += "Isim-specific dependencies : {}\n".format(' '.join(self.depend))
         if self.isim_options: s += "Isim compile options : {}\n".format(' '.join(self.isim_options))
+        return s
+
+
+class XsimSection(ToolSection):
+
+    TAG = 'xsim'
+
+    def __init__(self, items=None):
+        super(XsimSection, self).__init__()
+
+        self._add_member('xsim_options', StringList, "Extra Xsim compile options")
+
+        if items:
+            self.load_dict(items)
+
+    def __str__(self):
+        s = ""
+        if self.depend: s += "Xsim-specific dependencies : {}\n".format(' '.join(self.depend))
+        if self.xsim_options: s += "Xsim compile options : {}\n".format(' '.join(self.xsim_options))
         return s
 
 
