@@ -1,4 +1,5 @@
 import subprocess
+import os
 import re
 import sys
 from fusesoc.config import Config
@@ -13,7 +14,10 @@ class Launcher:
         self.cmd      = cmd
         self.args     = args
         self.shell    = shell
-        self.cwd      = cwd
+        if cwd:
+            self.cwd  = cwd
+        else:
+            self.cwd  = os.getcwd()
         self.stderr   = stderr
         self.stdout   = stdout
         self.errormsg = errormsg
