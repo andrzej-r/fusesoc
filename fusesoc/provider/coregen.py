@@ -13,7 +13,8 @@ class Coregen(object):
         status = self.status()
         if status != 'downloaded':
             self._checkout()
-        return True
+            return True
+        return False
 
     def _checkout(self):
         pr_info("Using Coregen to generate project " + self.project_file)
@@ -22,6 +23,9 @@ class Coregen(object):
         src_files = os.listdir(self.core_root)
         for f in src_files:
             f_src = os.path.join(self.core_root, f)
+            if os.path.isdir(f_src):
+                # skip directories
+                continue
             f_dst = os.path.join(self.files_root, f)
             if(os.path.exists(f_src)):
                 shutil.copyfile(f_src, f_dst)
