@@ -8,15 +8,27 @@ class Ise(Backend):
 
     TCL_FILE_TEMPLATE = """
 
-project new {design}
-project set family {family}
-project set device {device}
-project set package {package}
-project set speed {speed}
+set design {design}
+set top_module {top_module}
+set family {family}
+set device {device}
+set package {package}
+set speed {speed}
+set source_files [ list \\
+{source_files}
+]
+project new $design
+project set family $family
+project set device $device
+project set package $package
+project set speed $speed
 project set "Generate Detailed MAP Report" true
 project set "Verilog Include Directories" "{verilog_include_dirs}" -process "Synthesize - XST"
-{source_files}
-project set top "{top_module}"
+foreach file $source_files {{
+  puts "Adding file $file"
+  xfile add $file
+}}
+project set top $top_module
 """
 
     TCL_FUNCTIONS = """
@@ -75,7 +87,8 @@ quit
             speed                = self.system.backend.speed,
             top_module           = self.system.backend.top_module,
             verilog_include_dirs = '|'.join(self.include_dirs),
-            source_files = '\n'.join(['xfile add '+s for s in self.src_files])))
+            #source_files = '\n'.join(['xfile add '+s for s in self.src_files])))
+            source_files = '\n'.join([s+' \\' for s in self.src_files])))
 
         for f in self.system.backend.tcl_files:
             tcl_file.write(open(os.path.join(self.system_root, f)).read())
