@@ -16,7 +16,8 @@ provider_PYTHON =      \
  fusesoc/provider/git.py       \
  fusesoc/provider/github.py    \
  fusesoc/provider/url.py       \
- fusesoc/provider/coregen.py
+ fusesoc/provider/coregen.py   \
+ fusesoc/provider/logicore.py
 if HAVE_SVN
  provider_PYTHON += fusesoc/provider/opencores.py
 endif
